@@ -2,7 +2,6 @@ import abstractClass.AbstractAlgorithm;
 import algorithms.Bruteforce;
 import algorithms.Greedy;
 import algorithms.RandomSolution;
-import cryptography.CryptoException;
 import cryptography.SymmetricCryptography;
 import knapSack.Instance;
 import knapSack.Item;
@@ -48,20 +47,16 @@ public class App {
         record.println(message);
         record.close();
 
-        try {
-            SymmetricCryptography.encrypt(key, inputFile, encryptedFile);
+        SymmetricCryptography.encrypt(key, inputFile, encryptedFile);
 
-            if (inputFile.exists()){
-                inputFile.delete();
-            }
+        if (inputFile.exists()){
+            inputFile.delete();
         }
-        catch (CryptoException ex) {
-            System.out.println(ex.getMessage()); ex.printStackTrace();
-        }
+
         scaner.nextLine();
     }
 
-    public static void decryptFile() throws IOException, BadPaddingException {
+    public static void decryptFile() throws IOException {
         Scanner scaner = new Scanner(System.in);
         String message;
         String _key;
@@ -75,20 +70,14 @@ public class App {
         if(_key.getBytes().length == 16) {
             setKey(_key);
 
-            try {
-                SymmetricCryptography.decrypt(key, encryptedFile, decryptedFile);
+            SymmetricCryptography.decrypt(key, encryptedFile, decryptedFile);
 
-                if(SymmetricCryptography.decrypted){
+            if(SymmetricCryptography.decrypted){
                     BufferedReader reader = new BufferedReader(new FileReader("document.decrypted"));
                     message = reader.readLine();
                     reader.close();
                     System.out.println("Message was decrypt."); System.out.println("Text: " + message);
 
-                }
-            }
-            catch (CryptoException ex)
-            {
-                System.out.println(ex.getMessage()); ex.printStackTrace();
             }
 
         }else { System.out.println("Wrong key.");}
