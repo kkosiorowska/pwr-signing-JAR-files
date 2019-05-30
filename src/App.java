@@ -1,11 +1,20 @@
+import abstractClass.AbstractAlgorithm;
+import algorithms.Bruteforce;
+import algorithms.Greedy;
+import algorithms.RandomSolution;
 import cryptography.CryptoException;
 import cryptography.SymmetricCryptography;
+import knapSack.Instance;
+import knapSack.Item;
+import knapSack.Solution;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.*;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class App {
@@ -15,6 +24,11 @@ public class App {
     private static String fileName = "message";
     private static File encryptedFile = new File("document.encrypted");
     private static File decryptedFile = new File("document.decrypted");
+    private static Instance instance = new Instance();
+    private static List<Item> listItems = new ArrayList<>();
+    private static int capacity = 10;
+    private static AbstractAlgorithm alg ;
+    private static Solution solution;
 
     public static void encryptFile() throws IOException {
         Scanner scaner = new Scanner(System.in);
@@ -36,6 +50,10 @@ public class App {
 
         try {
             SymmetricCryptography.encrypt(key, inputFile, encryptedFile);
+
+            if (inputFile.exists()){
+                inputFile.delete();
+            }
         }
         catch (CryptoException ex) {
             System.out.println(ex.getMessage()); ex.printStackTrace();
@@ -110,7 +128,128 @@ public class App {
         }
     }
 
+    public static void printInstance() {
+
+        if(listItems.isEmpty()) System.out.println("Empty list.");
+        else {
+            System.out.println("Items : ");
+            for(int i=0 ; i <listItems.size() ; i++){
+                System.out.print("( "+ listItems.get(i).weight + ", " + listItems.get(i).profit + " ) ");
+            }
+        }
+    }
+
+    public static void printSolution(){
+        System.out.print("[ ");
+        for(int i=0 ; i < solution.knapSack.size() ; i++){
+            if(i==solution.knapSack.size()-1) System.out.print(solution.knapSack.get(i));
+            else System.out.print(solution.knapSack.get(i)+ ", ");
+        }
+        System.out.print(" ]");
+        System.out.println("");
+    }
+
+    public static void solveProblem() {
+        Scanner scaner = new Scanner(System.in);
+        String choice;
+        boolean stop = false;
+
+        while (!stop) {
+            System.out.println("---------------------Solve problem---------------------");
+            System.out.println("");
+            System.out.println("1. - Brute force");
+            System.out.println("2. - Random solution");
+            System.out.println("3. - Greedy");
+            System.out.println("0. - Back");
+            System.out.print("Choice: ");
+            choice = scaner.nextLine();
+            switch (choice) {
+                case "1":
+                    System.out.println("---------------------Brute force---------------------");
+                    System.out.println("");
+                    if(!listItems.isEmpty() && capacity >0){
+                        alg = new Bruteforce();
+                        instance = new Instance(listItems, capacity);
+                        solution = alg.algorithm(instance);
+                        System.out.println("Solution: ");
+                        printSolution();
+                    }else {System.out.println("ERROR");}
+                    break;
+                case "2":
+                    System.out.println("---------------------Random Solution---------------------");
+                    System.out.println("");
+                    if(!listItems.isEmpty() && capacity >0){
+                        alg = new RandomSolution();
+                        instance = new Instance(listItems, capacity);
+                        solution = alg.algorithm(instance);
+                        System.out.println("Solution: ");
+                        printSolution();
+                    }else {System.out.println("ERROR");}
+                    break;
+
+                case "3":
+                    System.out.println("---------------------Greedy---------------------");
+                    System.out.println("");
+                    if(!listItems.isEmpty() && capacity >0){
+                        alg = new Greedy();
+                        instance = new Instance(listItems, capacity);
+                        solution = alg.algorithm(instance);
+                        System.out.println("Solution: ");
+                        printSolution();
+                    }else {System.out.println("ERROR");}
+                    break;
+                case "0":
+                    stop = true;
+                    break;
+                default:
+                    System.out.println("Error!");
+            }
+        }
+    }
+
     public static void knapsackProblem(){
+        Scanner scaner = new Scanner(System.in);
+        String choice;
+        float profit;
+        int weight;
+
+        while (true) {
+            System.out.println("---------------------Knapsack---------------------");
+            System.out.println("");
+            System.out.println("Capacity: " + capacity );
+            printInstance();
+            System.out.println("");
+            System.out.println("1. - Add item");
+            System.out.println("2. - Change capacity");
+            System.out.println("3. - Solve problem");
+            System.out.println("0. - Back");
+            System.out.print("Choice: ");
+            choice = scaner.nextLine();
+            switch (choice) {
+                case "1":
+                    System.out.println("---------------------Add item---------------------");
+                    System.out.println("");
+                    System.out.println("Profit: ");
+                    profit =  Integer.parseInt(scaner.nextLine());
+                    System.out.println("Weight: ");
+                    weight = Integer.parseInt(scaner.nextLine());
+                    listItems.add(new Item(profit, weight));
+                    break;
+                case "2":
+                    System.out.println("---------------------Capacity---------------------");
+                    System.out.println("");
+                    System.out.println("New capacity: ");
+                    capacity = Integer.parseInt(scaner.nextLine());
+                    break;
+                case "3":
+                    solveProblem();
+                    break;
+                case "0":
+                    System.exit(0);
+                default:
+                    System.out.println("Error!");
+            }
+        }
 
     }
 

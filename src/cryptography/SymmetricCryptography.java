@@ -16,6 +16,8 @@ import java.security.NoSuchAlgorithmException;
 public class SymmetricCryptography {
     // Source
     //https://www.codejava.net/coding/file-encryption-and-decryption-simple-example
+
+    //https://www.baeldung.com/java-cipher-input-output-stream
     private static final String ALGORITHM = "AES";
     private static final String TRANSFORMATION = "AES";
     public static boolean decrypted = false;
