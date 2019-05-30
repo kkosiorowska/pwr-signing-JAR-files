@@ -212,8 +212,9 @@ public class App {
         String choice;
         float profit;
         int weight;
+        boolean stop = false;
 
-        while (true) {
+        while (!stop) {
             System.out.println("---------------------Knapsack---------------------");
             System.out.println("");
             System.out.println("Capacity: " + capacity );
@@ -245,7 +246,8 @@ public class App {
                     solveProblem();
                     break;
                 case "0":
-                    System.exit(0);
+                    stop = true;
+                    listItems.clear();
                 default:
                     System.out.println("Error!");
             }
