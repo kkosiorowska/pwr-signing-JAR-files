@@ -1,5 +1,5 @@
 # pwr-signing-JAR-files
 
-##Command to verifying a signed JAR file is:
+## Command to verifying a signed JAR file is:
   
-  jarsigner -verify jar-file
+* jarsigner -verify jar-file
